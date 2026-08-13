@@ -1,0 +1,133 @@
+{%- comment -%} Purelane Combos (#combos) — blocks reference real products, pricing computed live {%- endcomment -%}
+
+<section class="pl-combos" id="combos" data-scene="3">
+  <div class="pl-wrap">
+    <div class="pl-panelhead pl-rv">
+      {%- if section.settings.kicker != blank -%}<span class="pl-kicker">{{ section.settings.kicker }}</span>{%- endif -%}
+      <h2 class="pl-d2" style="margin-top:12px">{{ section.settings.heading }}</h2>
+    </div>
+
+    <div class="pl-comborail pl-rv">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'combo' -%}
+          {%- assign p1 = nil -%}{%- assign p2 = nil -%}{%- assign p3 = nil -%}
+          {%- if block.settings.product_handle_1 != blank -%}{%- assign p1 = all_products[block.settings.product_handle_1] -%}{%- endif -%}
+          {%- if block.settings.product_handle_2 != blank -%}{%- assign p2 = all_products[block.settings.product_handle_2] -%}{%- endif -%}
+          {%- if block.settings.product_handle_3 != blank -%}{%- assign p3 = all_products[block.settings.product_handle_3] -%}{%- endif -%}
+
+          {%- assign total_price = 0 -%}
+          {%- assign compare_price = 0 -%}
+          {%- assign pcount = 0 -%}
+          {%- if p1 != nil -%}{%- assign pcount = pcount | plus: 1 -%}{%- assign total_price = total_price | plus: p1.price -%}{%- if p1.compare_at_price > p1.price -%}{%- assign compare_price = compare_price | plus: p1.compare_at_price -%}{%- else -%}{%- assign compare_price = compare_price | plus: p1.price -%}{%- endif -%}{%- endif -%}
+          {%- if p2 != nil -%}{%- assign pcount = pcount | plus: 1 -%}{%- assign total_price = total_price | plus: p2.price -%}{%- if p2.compare_at_price > p2.price -%}{%- assign compare_price = compare_price | plus: p2.compare_at_price -%}{%- else -%}{%- assign compare_price = compare_price | plus: p2.price -%}{%- endif -%}{%- endif -%}
+          {%- if p3 != nil -%}{%- assign pcount = pcount | plus: 1 -%}{%- assign total_price = total_price | plus: p3.price -%}{%- if p3.compare_at_price > p3.price -%}{%- assign compare_price = compare_price | plus: p3.compare_at_price -%}{%- else -%}{%- assign compare_price = compare_price | plus: p3.price -%}{%- endif -%}{%- endif -%}
+          {%- assign savings = compare_price | minus: total_price -%}
+
+          <article class="pl-combo pl-glass{% if block.settings.flag == 'most_popular' %} pl-combo--hero{% endif %}" {{ block.shopify_attributes }}>
+            <div class="pl-combo__tray">
+              {%- if savings > 0 -%}<span class="pl-save">You save {{ savings | money_without_trailing_zeros }}</span>{%- endif -%}
+              {%- if block.settings.flag == 'most_popular' -%}<span class="pl-flag">Most popular</span>{%- elsif block.settings.flag == 'best_value' -%}<span class="pl-flag">Best value</span>{%- endif -%}
+              <div class="pl-combo__stack">
+                {%- if p1 != nil -%}<span class="pl-it">{%- if p1.featured_image != blank -%}{{ p1.featured_image | image_url: width: 120 | image_tag: loading: 'lazy', alt: p1.title }}{%- endif -%}<span>{{ p1.title }}</span></span>{%- endif -%}
+                {%- if p2 != nil -%}<span class="pl-plus" aria-hidden="true">+</span><span class="pl-it">{%- if p2.featured_image != blank -%}{{ p2.featured_image | image_url: width: 120 | image_tag: loading: 'lazy', alt: p2.title }}{%- endif -%}<span>{{ p2.title }}</span></span>{%- endif -%}
+                {%- if p3 != nil -%}<span class="pl-plus" aria-hidden="true">+</span><span class="pl-it">{%- if p3.featured_image != blank -%}{{ p3.featured_image | image_url: width: 120 | image_tag: loading: 'lazy', alt: p3.title }}{%- endif -%}<span>{{ p3.title }}</span></span>{%- endif -%}
+              </div>
+            </div>
+            <div class="pl-combo__body">
+              <h3>{{ block.settings.title }}</h3>
+              <div class="pl-cnt">{{ pcount }} product{% if pcount != 1 %}s{% endif %}</div>
+              {%- if block.settings.description != blank -%}<p class="pl-inc">{{ block.settings.description }}</p>{%- endif -%}
+              <div class="pl-prow">
+                <strong>{{ total_price | money_without_trailing_zeros }}</strong>
+                {%- if compare_price > total_price -%}<s>{{ compare_price | money_without_trailing_zeros }}</s>{%- endif -%}
+                {%- if savings > 0 -%}<em>Save {{ savings | money_without_trailing_zeros }}</em>{%- endif -%}
+              </div>
+              <a class="pl-btn {% if block.settings.flag == 'most_popular' %}pl-btn--primary{% else %}pl-btn--ghost{% endif %}" href="{{ block.settings.link | default: '#bundles' }}">
+                Shop bundle
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13m-5-6 6 6-6 6"/></svg>
+              </a>
+            </div>
+          </article>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+.pl-combos{position:relative;z-index:2;padding:34px 0;background:linear-gradient(178deg,#067c71 0%,#00625d 30%,#014e4a 64%,#023c39 100%)}
+.pl-wrap{max-width:1180px;margin:0 auto;padding:0 18px}
+.pl-panelhead{text-align:center;max-width:640px;margin:0 auto 28px}
+.pl-kicker{font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:rgba(236,230,247,.52)}
+.pl-d2{font-family:'Outfit',system-ui,sans-serif;text-transform:uppercase;letter-spacing:-.018em;font-weight:800;line-height:.94;color:#faf7fd;font-size:clamp(30px,4.6vw,54px)}
+.pl-glass{background:linear-gradient(158deg,rgba(236,230,247,.15),rgba(75,58,143,.20) 58%,rgba(23,16,43,.28));backdrop-filter:blur(24px) saturate(150%);-webkit-backdrop-filter:blur(24px) saturate(150%);border:1px solid rgba(236,230,247,.22);border-radius:26px;box-shadow:0 26px 74px rgba(18,12,34,.44),inset 0 1px 0 rgba(255,255,255,.24);position:relative;overflow:hidden}
+.pl-comborail{display:grid;grid-auto-flow:column;grid-auto-columns:82%;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:8px}
+@media(min-width:860px){.pl-comborail{grid-auto-columns:31%}}
+.pl-combo{scroll-snap-align:start;padding:18px;display:flex;flex-direction:column;transition:.4s cubic-bezier(.2,.7,.2,1)}
+.pl-combo:hover{transform:translateY(-6px)}
+.pl-combo--hero{border-color:rgba(240,160,60,.4)}
+.pl-combo__tray{position:relative;padding:14px;border-radius:16px;background:rgba(0,0,0,.15);margin-bottom:14px}
+.pl-save{display:inline-block;font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#f0a03c;margin-bottom:10px}
+.pl-flag{position:absolute;top:10px;right:10px;font-size:8.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:4px 9px;border-radius:999px;background:rgba(240,160,60,.2);border:1px solid rgba(240,160,60,.4);color:#f0a03c;animation:pl-glow 2.4s ease-in-out infinite}
+@keyframes pl-glow{0%,100%{box-shadow:0 0 0 0 rgba(240,160,60,.35)}50%{box-shadow:0 0 0 6px rgba(240,160,60,0)}}.pl-combo__stack{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.pl-it{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:9px;color:rgba(236,230,247,.7);text-align:center;max-width:70px}
+.pl-it img{max-height:50px;width:auto}
+.pl-plus{color:rgba(236,230,247,.4);font-size:14px}
+.pl-combo__body h3{font-family:'Outfit',sans-serif;font-size:18px;font-weight:700;text-transform:uppercase;color:#faf7fd;margin-bottom:4px}
+.pl-cnt{font-size:11px;color:#f0a03c;font-weight:700;margin-bottom:10px}
+.pl-inc{font-size:12.5px;color:rgba(236,230,247,.7);margin-bottom:14px;line-height:1.5}
+.pl-prow{display:flex;align-items:baseline;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.pl-prow strong{font-family:'Outfit',sans-serif;font-size:22px;color:#faf7fd;font-weight:800}
+.pl-prow s{font-size:13px;color:rgba(236,230,247,.5)}
+.pl-prow em{font-style:normal;font-size:11px;font-weight:800;color:#f0a03c}
+.pl-btn{display:inline-flex;flex:0 0 auto;width:fit-content;align-items:center;justify-content:center;gap:10px;height:44px;padding:0 20px;border-radius:999px;font-size:11.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;text-decoration:none;margin-top:auto}
+.pl-btn svg{width:15px;height:15px}
+.pl-btn--primary{background:linear-gradient(135deg,#c9761d,#5d8d1c);color:#08211a}
+.pl-btn--ghost{background:rgba(236,230,247,.1);border:1px solid rgba(236,230,247,.3);color:#faf7fd}
+.pl-rv{opacity:0;transform:translateY(30px);filter:blur(7px);transition:opacity .95s cubic-bezier(.2,.7,.2,1),transform .95s cubic-bezier(.2,.7,.2,1),filter .95s cubic-bezier(.2,.7,.2,1)}
+.pl-rv.pl-in{opacity:1;transform:none;filter:none}
+@media(prefers-reduced-motion: reduce){.pl-rv{transition:none!important;opacity:1;transform:none;filter:none}}
+{% endstylesheet %}
+
+{% javascript %}
+var plComboObserver = new IntersectionObserver(function (entries) {
+  entries.forEach(function (entry) { if (entry.isIntersecting) entry.target.classList.add('pl-in'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.pl-combos .pl-rv').forEach(function (el) { plComboObserver.observe(el); });
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Purelane Combos",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "kicker", "label": "Kicker", "default": "Pre-built to save you money" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Best selling combos" }
+  ],
+  "blocks": [
+    {
+      "type": "combo",
+      "name": "Combo",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title", "default": "Kitchen essentials" },
+        { "type": "textarea", "id": "description", "label": "Description" },
+        { "type": "select", "id": "flag", "label": "Flag", "options": [ { "value": "none", "label": "None" }, { "value": "most_popular", "label": "Most popular" }, { "value": "best_value", "label": "Best value" } ], "default": "none" },
+        { "type": "url", "id": "link", "label": "Link" },
+        { "type": "text", "id": "product_handle_1", "label": "Product 1 handle" },
+        { "type": "text", "id": "product_handle_2", "label": "Product 2 handle" },
+        { "type": "text", "id": "product_handle_3", "label": "Product 3 handle" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Purelane Combos",
+      "blocks": [
+        { "type": "combo", "settings": { "title": "Kitchen essentials", "flag": "most_popular", "product_handle_1": "kitchen-cleaner-foaming", "product_handle_2": "dishwash-gel", "product_handle_3": "tap-cleaner-limescale-remover" } },
+        { "type": "combo", "settings": { "title": "Bathroom deep clean", "product_handle_1": "toilet-cleaner", "product_handle_2": "tap-cleaner-limescale-remover" } },
+        { "type": "combo", "settings": { "title": "Whole home value", "flag": "best_value", "product_handle_1": "kitchen-cleaner-foaming", "product_handle_2": "floor-cleaner", "product_handle_3": "washing-machine-cleaner-descaler" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

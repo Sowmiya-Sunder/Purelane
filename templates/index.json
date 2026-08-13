@@ -1,75 +1,56 @@
 {
   "sections": {
-    "image_banner": {
-      "type": "image-banner",
+    "hero": {
+      "type": "hero",
       "blocks": {
-        "heading": {
-          "type": "heading",
-          "settings": {
-            "heading": "Browse our latest products",
-            "heading_size": "h0"
-          }
-        },
-        "button": {
-          "type": "buttons",
-          "settings": {
-            "button_label_1": "Shop all",
-            "button_link_1": "shopify://collections/all",
-            "button_style_secondary_1": true,
-            "button_label_2": "",
-            "button_link_2": "",
-            "button_style_secondary_2": false
-          }
-        }
+        "state1": { "type": "hero_state", "settings": { "label": "Single bottle", "product_handle_1": "kitchen-cleaner-foaming" } },
+        "state2": { "type": "hero_state", "settings": { "label": "Any 2 products", "product_handle_1": "tap-cleaner-limescale-remover", "product_handle_2": "kitchen-cleaner-foaming" } },
+        "state3": { "type": "hero_state", "settings": { "label": "Any 3 products", "product_handle_1": "tap-cleaner-limescale-remover", "product_handle_2": "copper-bronze-brass-cleaner", "product_handle_3": "kitchen-cleaner-foaming" } }
       },
-      "block_order": [
-        "heading",
-        "button"
-      ],
-      "settings": {
-        "image_overlay_opacity": 40,
-        "image_height": "large",
-        "desktop_content_position": "bottom-center",
-        "show_text_box": false,
-        "image_behavior": "none",
-        "desktop_content_alignment": "center",
-        "color_scheme": "scheme-3",
-        "mobile_content_alignment": "center",
-        "stack_images_on_mobile": false,
-        "show_text_below": false
-      }
+      "block_order": ["state1", "state2", "state3"],
+      "settings": {}
     },
-    "featured_collection": {
-      "type": "featured-collection",
-      "settings": {
-        "title": "Featured products",
-        "heading_size": "h2",
-        "description": "",
-        "show_description": false,
-        "description_style": "body",
-        "collection": "all",
-        "products_to_show": 8,
-        "columns_desktop": 4,
-        "color_scheme": "scheme-1",
-        "full_width": false,
-        "show_view_all": true,
-        "view_all_style": "solid",
-        "enable_desktop_slider": false,
-        "swipe_on_mobile": false,
-        "image_ratio": "adapt",
-        "image_shape": "default",
-        "show_secondary_image": true,
-        "show_vendor": false,
-        "show_rating": false,
-        "quick_add": "none",
-        "columns_mobile": "2",
-        "padding_top": 44,
-        "padding_bottom": 36
-      }
+    "shop": {
+      "type": "shop-grid",
+      "settings": { "collection": "all" }
+    },
+    "combos": {
+      "type": "combos",
+      "blocks": {
+        "c1": { "type": "combo", "settings": { "title": "Kitchen essentials", "flag": "most_popular", "product_handle_1": "kitchen-cleaner-foaming", "product_handle_2": "dishwash-gel", "product_handle_3": "tap-cleaner-limescale-remover" } },
+        "c2": { "type": "combo", "settings": { "title": "Bathroom deep clean", "product_handle_1": "toilet-cleaner", "product_handle_2": "tap-cleaner-limescale-remover" } },
+        "c3": { "type": "combo", "settings": { "title": "Whole home value", "flag": "best_value", "product_handle_1": "kitchen-cleaner-foaming", "product_handle_2": "floor-cleaner", "product_handle_3": "washing-machine-cleaner-descaler" } }
+      },
+      "block_order": ["c1", "c2", "c3"],
+      "settings": {}
+    },
+    "bundles": {
+      "type": "bundles",
+      "blocks": {
+        "t1": { "type": "tier", "settings": { "tag": "Starter", "feature_list": "Pick any two products\nFree shipping across India", "product_handle_1": "tap-cleaner-limescale-remover", "product_handle_2": "kitchen-cleaner-foaming" } },
+        "t2": { "type": "tier", "settings": { "tag": "Most popular", "featured": true, "feature_list": "Pick any three products\nCovers kitchen and laundry\nFree shipping across India", "product_handle_1": "kitchen-cleaner-foaming", "product_handle_2": "tap-cleaner-limescale-remover", "product_handle_3": "dishwash-gel" } },
+        "t3": { "type": "tier", "settings": { "tag": "Whole home", "feature_list": "Pick any five products\nEvery room in one order\nFree shipping across India", "product_handle_1": "kitchen-cleaner-foaming", "product_handle_2": "tap-cleaner-limescale-remover", "product_handle_3": "floor-cleaner" } }
+      },
+      "block_order": ["t1", "t2", "t3"],
+      "settings": {}
+    },
+    "reviews": {
+      "type": "reviews",
+      "blocks": {
+        "r1": { "type": "review", "settings": { "title": "Works like a charm", "body": "Finally an eco option that cleans as well as the chemical detergent I used for years, and it smells better.", "author": "Anita", "product_name": "Laundry detergent" } },
+        "r2": { "type": "review", "settings": { "title": "Best dishwash ever", "body": "Our old dishwash left my hands dry and cracked. That stopped completely after we switched.", "author": "Priya", "product_name": "Dishwash gel" } },
+        "r3": { "type": "review", "settings": { "title": "Dog friendly", "body": "We switched because chemical floor cleaners were setting off my dog's allergies. No reactions since.", "author": "Rohit S.", "product_name": "Floor cleaner" } },
+        "r4": { "type": "review", "settings": { "title": "Sparkling taps again", "body": "Hard water had ruined our bathroom fittings. Two sprays and the scale wipes straight off, no scrubbing.", "author": "Verified buyer", "product_name": "Tap cleaner" } }
+      },
+      "block_order": ["r1", "r2", "r3", "r4"],
+      "settings": {}
     }
   },
   "order": [
-    "image_banner",
-    "featured_collection"
+    "hero",
+    "shop",
+    "combos",
+    "bundles",
+    "reviews"
   ]
 }

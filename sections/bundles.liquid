@@ -1,0 +1,136 @@
+{%- comment -%} Purelane Bundles (#bundles) — pricing tiers driven by real product blocks {%- endcomment -%}
+
+<section class="pl-bundles" id="bundles" data-scene="3">
+  <div class="pl-wrap">
+    <div class="pl-glass pl-secpad pl-rv" style="margin-bottom:16px">
+      {%- if section.settings.kicker != blank -%}<span class="pl-kicker">{{ section.settings.kicker }}</span>{%- endif -%}
+      <h2 class="pl-d2" style="margin-top:12px">{{ section.settings.heading }}</h2>
+      {%- if section.settings.subheading != blank -%}<p class="pl-lede">{{ section.settings.subheading }}</p>{%- endif -%}
+    </div>
+
+    <div class="pl-tiers">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'tier' -%}
+          {%- assign p1 = nil -%}{%- assign p2 = nil -%}{%- assign p3 = nil -%}
+          {%- if block.settings.product_handle_1 != blank -%}{%- assign p1 = all_products[block.settings.product_handle_1] -%}{%- endif -%}
+          {%- if block.settings.product_handle_2 != blank -%}{%- assign p2 = all_products[block.settings.product_handle_2] -%}{%- endif -%}
+          {%- if block.settings.product_handle_3 != blank -%}{%- assign p3 = all_products[block.settings.product_handle_3] -%}{%- endif -%}
+
+          {%- assign total_price = 0 -%}
+          {%- assign compare_price = 0 -%}
+          {%- assign pcount = 0 -%}
+          {%- if p1 != nil -%}{%- assign pcount = pcount | plus: 1 -%}{%- assign total_price = total_price | plus: p1.price -%}{%- if p1.compare_at_price > p1.price -%}{%- assign compare_price = compare_price | plus: p1.compare_at_price -%}{%- else -%}{%- assign compare_price = compare_price | plus: p1.price -%}{%- endif -%}{%- endif -%}
+          {%- if p2 != nil -%}{%- assign pcount = pcount | plus: 1 -%}{%- assign total_price = total_price | plus: p2.price -%}{%- if p2.compare_at_price > p2.price -%}{%- assign compare_price = compare_price | plus: p2.compare_at_price -%}{%- else -%}{%- assign compare_price = compare_price | plus: p2.price -%}{%- endif -%}{%- endif -%}
+          {%- if p3 != nil -%}{%- assign pcount = pcount | plus: 1 -%}{%- assign total_price = total_price | plus: p3.price -%}{%- if p3.compare_at_price > p3.price -%}{%- assign compare_price = compare_price | plus: p3.compare_at_price -%}{%- else -%}{%- assign compare_price = compare_price | plus: p3.price -%}{%- endif -%}{%- endif -%}
+
+          {%- assign per_product = 0 -%}
+          {%- if pcount > 0 -%}{%- assign per_product = total_price | divided_by: pcount -%}{%- endif -%}
+
+          <article class="pl-tier pl-glass pl-rv{% if block.settings.featured %} pl-tier--best{% endif %}" {{ block.shopify_attributes }}>
+            <span class="pl-tag">{{ block.settings.tag }}</span>
+            <div class="pl-tierpix" aria-hidden="true">
+              {%- if p1 != nil and p1.featured_image != blank -%}{{ p1.featured_image | image_url: width: 100 | image_tag: loading: 'lazy', alt: p1.title }}{%- endif -%}
+              {%- if p2 != nil and p2.featured_image != blank -%}{{ p2.featured_image | image_url: width: 100 | image_tag: loading: 'lazy', alt: p2.title }}{%- endif -%}
+              {%- if p3 != nil and p3.featured_image != blank -%}{{ p3.featured_image | image_url: width: 100 | image_tag: loading: 'lazy', alt: p3.title }}{%- endif -%}
+            </div>
+            <div class="pl-qty">{{ pcount }}<small>Products</small></div>
+            <div class="pl-price">{{ total_price | money_without_trailing_zeros }} {%- if compare_price > total_price -%}<s>{{ compare_price | money_without_trailing_zeros }}</s>{%- endif -%}</div>
+            {%- if per_product > 0 -%}<p class="pl-perunit">Flat {{ per_product | money_without_trailing_zeros }} per product</p>{%- endif -%}
+            {%- if block.settings.feature_list != blank -%}
+            <ul>
+              {%- assign features = block.settings.feature_list | newline_to_br | split: '<br />' -%}
+              {%- for feature in features -%}
+                {%- assign feature_trimmed = feature | strip -%}
+                {%- if feature_trimmed != blank -%}
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 13 4 4L19 7"/></svg>{{ feature_trimmed }}</li>
+                {%- endif -%}
+              {%- endfor -%}
+            </ul>
+            {%- endif -%}
+            <a class="pl-btn {% if block.settings.featured %}pl-btn--primary{% else %}pl-btn--ghost{% endif %}" href="{{ block.settings.link | default: '#shop' }}">
+              Build this box
+              {%- if block.settings.featured -%}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13m-5-6 6 6-6 6"/></svg>{%- endif -%}
+            </a>
+          </article>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+.pl-bundles{position:relative;z-index:2;padding:34px 0;background:linear-gradient(178deg,#036359 0%,#014b46 32%,#013431 66%,#012422 100%)}
+.pl-wrap{max-width:1180px;margin:0 auto;padding:0 18px}
+.pl-glass{background:linear-gradient(158deg,rgba(236,230,247,.15),rgba(75,58,143,.20) 58%,rgba(23,16,43,.28));backdrop-filter:blur(24px) saturate(150%);-webkit-backdrop-filter:blur(24px) saturate(150%);border:1px solid rgba(236,230,247,.22);border-radius:26px;box-shadow:0 26px 74px rgba(18,12,34,.44),inset 0 1px 0 rgba(255,255,255,.24);position:relative;overflow:hidden}
+.pl-secpad{padding:32px;text-align:center}
+.pl-kicker{font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:rgba(236,230,247,.52)}
+.pl-d2{font-family:'Outfit',system-ui,sans-serif;text-transform:uppercase;letter-spacing:-.018em;font-weight:800;line-height:.94;color:#faf7fd;font-size:clamp(30px,4.6vw,54px)}
+.pl-lede{font-size:15px;color:rgba(236,230,247,.74);max-width:44ch;margin:14px auto 0}
+.pl-tiers{display:grid;gap:16px;grid-template-columns:1fr}
+@media(min-width:760px){.pl-tiers{grid-template-columns:repeat(3,1fr)}}
+.pl-tier{padding:26px 22px;display:flex;flex-direction:column;text-align:center;transition:.4s cubic-bezier(.2,.7,.2,1)}
+.pl-tier:hover{transform:translateY(-6px)}
+.pl-tier--best{border-color:rgba(240,160,60,.4)}
+.pl-tag{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#f0a03c;margin-bottom:16px}
+.pl-tierpix{display:flex;justify-content:center;gap:6px;height:70px;align-items:flex-end;margin-bottom:16px}
+.pl-tierpix img{max-height:70px;width:auto}
+.pl-qty{font-family:'Outfit',sans-serif;font-size:32px;font-weight:800;color:#faf7fd;margin-bottom:6px}
+.pl-qty small{display:block;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(236,230,247,.5)}
+.pl-price{font-family:'Outfit',sans-serif;font-size:24px;font-weight:800;color:#faf7fd;margin-bottom:4px}
+.pl-price s{font-size:14px;font-weight:400;color:rgba(236,230,247,.5);margin-left:6px}
+.pl-perunit{font-size:12px;color:rgba(236,230,247,.6);margin-bottom:16px}
+.pl-tier ul{list-style:none;text-align:left;margin-bottom:20px}
+.pl-tier li{display:flex;align-items:center;gap:8px;font-size:12.5px;color:rgba(236,230,247,.8);padding:6px 0}
+.pl-tier li svg{width:15px;height:15px;color:#f0a03c;flex:0 0 auto}
+.pl-btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;height:46px;padding:0 22px;border-radius:999px;font-size:12px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;text-decoration:none;margin-top:auto;width:100%}
+.pl-btn svg{width:15px;height:15px}
+.pl-btn--primary{background:linear-gradient(135deg,#c9761d,#5d8d1c);color:#08211a}
+.pl-btn--ghost{background:rgba(236,230,247,.1);border:1px solid rgba(236,230,247,.3);color:#faf7fd}
+.pl-rv{opacity:0;transform:translateY(30px);filter:blur(7px);transition:opacity .95s cubic-bezier(.2,.7,.2,1),transform .95s cubic-bezier(.2,.7,.2,1),filter .95s cubic-bezier(.2,.7,.2,1)}
+.pl-rv.pl-in{opacity:1;transform:none;filter:none}
+@media(prefers-reduced-motion: reduce){.pl-rv{transition:none!important;opacity:1;transform:none;filter:none}}
+{% endstylesheet %}
+
+{% javascript %}
+var plTierObserver = new IntersectionObserver(function (entries) {
+  entries.forEach(function (entry) { if (entry.isIntersecting) entry.target.classList.add('pl-in'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.pl-bundles .pl-rv').forEach(function (el) { plTierObserver.observe(el); });
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Purelane Bundles",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "kicker", "label": "Kicker", "default": "Build your bundle" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "One box. Every room." },
+    { "type": "textarea", "id": "subheading", "label": "Subheading", "default": "Mix and match across kitchen, laundry, home and skin. One flat price, no code needed, free shipping either way." }
+  ],
+  "blocks": [
+    {
+      "type": "tier",
+      "name": "Tier",
+      "settings": [
+        { "type": "text", "id": "tag", "label": "Tag", "default": "Starter" },
+        { "type": "checkbox", "id": "featured", "label": "Highlight as most popular", "default": false },
+        { "type": "url", "id": "link", "label": "Link" },
+        { "type": "textarea", "id": "feature_list", "label": "Feature list", "info": "One feature per line" },
+        { "type": "text", "id": "product_handle_1", "label": "Product 1 handle" },
+        { "type": "text", "id": "product_handle_2", "label": "Product 2 handle" },
+        { "type": "text", "id": "product_handle_3", "label": "Product 3 handle" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Purelane Bundles",
+      "blocks": [
+        { "type": "tier", "settings": { "tag": "Starter", "feature_list": "Pick any two products\nFree shipping across India", "product_handle_1": "tap-cleaner-limescale-remover", "product_handle_2": "kitchen-cleaner-foaming" } },
+        { "type": "tier", "settings": { "tag": "Most popular", "featured": true, "feature_list": "Pick any three products\nCovers kitchen and laundry\nFree shipping across India", "product_handle_1": "kitchen-cleaner-foaming", "product_handle_2": "tap-cleaner-limescale-remover", "product_handle_3": "dishwash-gel" } },
+        { "type": "tier", "settings": { "tag": "Whole home", "feature_list": "Pick any five products\nEvery room in one order\nFree shipping across India", "product_handle_1": "kitchen-cleaner-foaming", "product_handle_2": "tap-cleaner-limescale-remover", "product_handle_3": "floor-cleaner" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
